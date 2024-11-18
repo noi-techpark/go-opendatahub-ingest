@@ -10,14 +10,14 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/noi-techpark/go-odh-ingest/dto"
+	"github.com/noi-techpark/go-odh-ingest/mq"
+	"github.com/noi-techpark/go-odh-ingest/ms"
 	"github.com/rabbitmq/amqp091-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"opendatahub.com/ingest/dto"
-	"opendatahub.com/ingest/mq"
-	"opendatahub.com/ingest/ms"
 )
 
 type Env struct {

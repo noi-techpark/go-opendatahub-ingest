@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/noi-techpark/go-odh-ingest/dto"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"opendatahub.com/ingest/dto"
 )
 
 type R struct {

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2024 NOI Techpark <digital@noi.bz.it>
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 
 package dc
 
@@ -11,7 +11,7 @@ import (
 )
 
 type Env struct {
-	ms.Env
+	ms.BaseEnv
 	RABBITMQ_URI      string
 	RABBITMQ_EXCHANGE string `default:"ingress"`
 	RABBITMQ_CLIENT   string

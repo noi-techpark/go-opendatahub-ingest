@@ -27,6 +27,5 @@ func InitLog(lv string) {
 // Default configuration parameters for logging and provider that all data collectors/transformers need
 // Embed this into your env struct
 type Env struct {
-	PROVIDER string
-	LOGLEVEL string `default:"INFO"`
+	LOG_LEVEL string `default:"INFO"`
 }

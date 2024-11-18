@@ -4,7 +4,7 @@
 
 module github.com/noi-techpark/go-odh-ingest
 
-go 1.23.3
+go 1.22
 
 require (
 	github.com/rabbitmq/amqp091-go v1.10.0

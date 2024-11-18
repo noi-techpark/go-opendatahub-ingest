@@ -11,7 +11,7 @@ import (
 )
 
 type Env struct {
-	ms.BaseEnv
+	ms.Env
 	RABBITMQ_URI      string
 	RABBITMQ_EXCHANGE string `default:"ingress"`
 	RABBITMQ_CLIENT   string

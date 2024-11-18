@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC0-1.0
 
-module github.com/noi-techpark/go-timeseries-client
+module github.com/noi-techpark/go-odh-ingest
 
 go 1.23.3
 

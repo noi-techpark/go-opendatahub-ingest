@@ -37,16 +37,14 @@ func (b *BaseEnv) LogLevel() string {
 	return b.LOGLEVEL
 }
 
-type Env interface {
-	BaseEnv
-	LogLevel() string
-}
+// type Env interface {
+// 	BaseEnv
+// 	LogLevel() string
+// }
 
 // Convenience one shot setup method
 // Create config from env and initialize logging system
-func Init[E Env]() E {
-	var e E
-	envconfig.MustProcess("", &e)
-	InitLog(e.LogLevel())
-	return e
+func Init(e BaseEnv) {
+	envconfig.MustProcess("", e)
+	InitLog(e.LOGLEVEL)
 }

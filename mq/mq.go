@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/noi-techpark/go-odh-ingest/dto"
+	"github.com/noi-techpark/go-opendatahub-ingest/dto"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 

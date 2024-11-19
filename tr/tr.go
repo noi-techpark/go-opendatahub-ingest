@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/noi-techpark/go-odh-ingest/dto"
-	"github.com/noi-techpark/go-odh-ingest/mq"
-	"github.com/noi-techpark/go-odh-ingest/ms"
+	"github.com/noi-techpark/go-opendatahub-ingest/dto"
+	"github.com/noi-techpark/go-opendatahub-ingest/mq"
+	"github.com/noi-techpark/go-opendatahub-ingest/ms"
 	"github.com/rabbitmq/amqp091-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

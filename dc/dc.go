@@ -5,9 +5,9 @@
 package dc
 
 import (
-	"github.com/noi-techpark/go-odh-ingest/dto"
-	"github.com/noi-techpark/go-odh-ingest/mq"
-	"github.com/noi-techpark/go-odh-ingest/ms"
+	"github.com/noi-techpark/go-opendatahub-ingest/dto"
+	"github.com/noi-techpark/go-opendatahub-ingest/mq"
+	"github.com/noi-techpark/go-opendatahub-ingest/ms"
 )
 
 type Env struct {

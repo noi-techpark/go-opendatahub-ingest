@@ -51,6 +51,9 @@ func Connect(uri string, client string) (R, error) {
 		return r, err
 	}
 
+	prefetch := 3
+	ch.Qos(prefetch, 0, true)
+
 	r.Ch = ch
 	r.Con = con
 

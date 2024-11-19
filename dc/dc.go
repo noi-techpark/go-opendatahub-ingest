@@ -12,14 +12,14 @@ import (
 
 type Env struct {
 	ms.Env
-	PROVIDER          string
-	RABBITMQ_URI      string
-	RABBITMQ_EXCHANGE string `default:"ingress"`
-	RABBITMQ_CLIENT   string
+	PROVIDER    string
+	MQ_URI      string
+	MQ_EXCHANGE string `default:"ingress"`
+	MQ_CLIENT   string
 }
 
 func PubFromEnv(e Env) (chan<- dto.RawAny, error) {
-	return Pub(e.RABBITMQ_URI, e.RABBITMQ_EXCHANGE, e.RABBITMQ_CLIENT)
+	return Pub(e.MQ_URI, e.MQ_EXCHANGE, e.MQ_CLIENT)
 }
 
 func Pub(uri string, client string, exchange string) (chan<- dto.RawAny, error) {

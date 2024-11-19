@@ -22,12 +22,12 @@ import (
 
 type Env struct {
 	ms.Env
-	RABBITMQ_URI      string
-	RABBITMQ_EXCHANGE string `default:"routed"`
-	RABBITMQ_CLIENT   string
-	RABBITMQ_QUEUE    string
-	RABBITMQ_KEY      string
-	MONGO_URI         string
+	MQ_URI      string
+	MQ_EXCHANGE string `default:"routed"`
+	MQ_CLIENT   string
+	MQ_QUEUE    string
+	MQ_KEY      string
+	MONGO_URI   string
 }
 
 func getMongo[Raw any](uri string, m dto.Notification) (*dto.Raw[Raw], error) {
@@ -67,7 +67,7 @@ func msgReject(d *amqp091.Delivery) {
 
 // Default configuration for transformers with one queue
 func ListenFromEnv[Raw any](e Env, handler func(*dto.Raw[Raw]) error) error {
-	return Listen(e.RABBITMQ_URI, e.RABBITMQ_CLIENT, e.RABBITMQ_EXCHANGE, e.RABBITMQ_QUEUE, e.RABBITMQ_KEY, e.MONGO_URI, handler)
+	return Listen(e.MQ_URI, e.MQ_CLIENT, e.MQ_EXCHANGE, e.MQ_QUEUE, e.MQ_KEY, e.MONGO_URI, handler)
 }
 
 // Configurable listen for transformers with multiple queues

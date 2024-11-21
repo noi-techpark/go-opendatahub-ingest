@@ -19,7 +19,7 @@ type Env struct {
 }
 
 func PubFromEnv(e Env) (chan<- dto.RawAny, error) {
-	return Pub(e.MQ_URI, e.MQ_EXCHANGE, e.MQ_CLIENT)
+	return Pub(e.MQ_URI, e.MQ_CLIENT, e.MQ_EXCHANGE)
 }
 
 func Pub(uri string, client string, exchange string) (chan<- dto.RawAny, error) {

@@ -88,19 +88,19 @@ func HandleDelivery[Raw any](delivery amqp091.Delivery, mongoUri string, handler
 	msgBody := dto.Notification{}
 	if err := json.Unmarshal(delivery.Body, &msgBody); err != nil {
 		msgReject(&delivery)
-		return fmt.Errorf("Error unmarshalling mq message: %w", err)
+		return fmt.Errorf("error unmarshalling mq message: %w", err)
 	}
 
 	rawFrame, err := getRawFrame[Raw](mongoUri, msgBody)
 	if err != nil {
 		msgReject(&delivery)
-		return fmt.Errorf("Cannot get mongo raw data: %w", err)
+		return fmt.Errorf("cannot get mongo raw data: %w", err)
 	}
 
 	err = handler(rawFrame)
 	if err != nil {
 		msgReject(&delivery)
-		return fmt.Errorf("Error during handling of message: %w", err)
+		return fmt.Errorf("error during handling of message: %w", err)
 	}
 
 	if err := delivery.Ack(false); err != nil {
@@ -119,4 +119,5 @@ func HandleQueue[Raw any](mq <-chan amqp091.Delivery, mongoUri string, handler f
 			slog.Error("Message handling failed", "err", err)
 		}
 	}
+	slog.Error("HandleQueue unexpected channel close")
 }

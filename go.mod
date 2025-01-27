@@ -7,6 +7,7 @@ module github.com/noi-techpark/go-opendatahub-ingest
 go 1.22
 
 require (
+	github.com/leodido/go-urn v1.4.0
 	github.com/rabbitmq/amqp091-go v1.10.0
 	go.mongodb.org/mongo-driver v1.17.1
 )

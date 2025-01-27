@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: MPL-2.0
+
 // Wrapper of leodido/go-urn to handle urn in the OpendataHub domain
 package urn
 

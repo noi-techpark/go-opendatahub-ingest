@@ -20,4 +20,5 @@ type Notification struct {
 	Id         string
 	Db         string
 	Collection string
+	Urn        string
 }

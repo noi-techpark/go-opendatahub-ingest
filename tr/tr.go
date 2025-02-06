@@ -13,6 +13,8 @@ import (
 	"github.com/noi-techpark/go-opendatahub-ingest/dto"
 	"github.com/noi-techpark/go-opendatahub-ingest/mq"
 	"github.com/noi-techpark/go-opendatahub-ingest/ms"
+	raw_data_bridge "github.com/noi-techpark/go-opendatahub-ingest/raw-data-bridge"
+	"github.com/noi-techpark/go-opendatahub-ingest/urn"
 	"github.com/rabbitmq/amqp091-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,7 +22,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type RdbEnv = raw_data_bridge.Env
 type Env struct {
+	RdbEnv
 	ms.Env
 	MQ_URI      string
 	MQ_EXCHANGE string `default:"routed"`
@@ -120,4 +124,74 @@ func HandleQueue[Raw any](mq <-chan amqp091.Delivery, mongoUri string, handler f
 		}
 	}
 	slog.Error("HandleQueue unexpected channel close")
+}
+
+type Handler[P any] func(context.Context, *dto.Raw[P]) error
+
+type TrStack[P any] struct {
+	data_bridge *raw_data_bridge.RDBridge
+	config      *Env
+}
+
+func NewTrStack[P any](config *Env) *TrStack[P] {
+	return &TrStack[P]{
+		data_bridge: raw_data_bridge.NewRDBridge(config.RdbEnv),
+		config:      config,
+	}
+}
+
+func (tr *TrStack[P]) Start(ctx context.Context, handler Handler[P]) error {
+	return tr.listen(ctx, handler)
+}
+
+func (tr *TrStack[P]) listen(ctx context.Context, handler Handler[P]) error {
+	r, err := mq.Connect(tr.config.MQ_URI, tr.config.MQ_CLIENT)
+	if err != nil {
+		return err
+	}
+	mq, err := r.Consume(tr.config.MQ_EXCHANGE, tr.config.MQ_QUEUE, tr.config.MQ_KEY)
+	if err != nil {
+		return err
+	}
+	for msg := range mq {
+		slog.Debug("Received a message", "body", msg.Body)
+
+		if err := tr.handleDelivery(ctx, msg, handler); err != nil {
+			slog.Error("Message handling failed", "err", err)
+		}
+	}
+	slog.Error("HandleQueue unexpected channel close")
+	return nil
+}
+
+func (tr *TrStack[P]) handleDelivery(ctx context.Context, delivery amqp091.Delivery, handler Handler[P]) error {
+	msgBody := dto.Notification{}
+	if err := json.Unmarshal(delivery.Body, &msgBody); err != nil {
+		msgReject(&delivery)
+		return fmt.Errorf("error unmarshalling mq message: %w", err)
+	}
+
+	u, ok := urn.Parse(msgBody.Urn)
+	if !ok {
+		return fmt.Errorf("invalid urn format in mq message: %s", msgBody.Urn)
+	}
+
+	rawFrame, err := raw_data_bridge.Get[P](tr.data_bridge, u)
+	if err != nil {
+		msgReject(&delivery)
+		return fmt.Errorf("cannot get raw data: %w", err)
+	}
+
+	err = handler(ctx, &rawFrame)
+	if err != nil {
+		msgReject(&delivery)
+		return fmt.Errorf("error during handling of message: %w", err)
+	}
+
+	if err := delivery.Ack(false); err != nil {
+		slog.Error("Could not ack elaborated message. Aborting", "err", err)
+		panic(err)
+	}
+
+	return nil
 }

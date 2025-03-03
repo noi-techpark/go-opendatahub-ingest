@@ -115,7 +115,7 @@ func HandleDelivery[Raw any](delivery amqp091.Delivery, mongoUri string, handler
 	return nil
 }
 
-func HandleQueue[Raw any](mq <-chan amqp091.Delivery, mongoUri string, handler func(*dto.Raw[Raw]) error) {
+func HandleQueue[Raw any](mq <-chan amqp091.Delivery, mongoUri string, handler func(*dto.Raw[Raw]) error) error {
 	for msg := range mq {
 		slog.Debug("Received a message", "body", msg.Body)
 
@@ -123,7 +123,7 @@ func HandleQueue[Raw any](mq <-chan amqp091.Delivery, mongoUri string, handler f
 			slog.Error("Message handling failed", "err", err)
 		}
 	}
-	slog.Error("HandleQueue unexpected channel close")
+	return fmt.Errorf("unexpected channel close")
 }
 
 type Handler[P any] func(context.Context, *dto.Raw[P]) error
@@ -160,8 +160,7 @@ func (tr *TrStack[P]) listen(ctx context.Context, handler Handler[P]) error {
 			slog.Error("Message handling failed", "err", err)
 		}
 	}
-	slog.Error("HandleQueue unexpected channel close")
-	return nil
+	return fmt.Errorf("unexpected channel close")
 }
 
 func (tr *TrStack[P]) handleDelivery(ctx context.Context, delivery amqp091.Delivery, handler Handler[P]) error {

@@ -23,15 +23,17 @@ import (
 )
 
 type RdbEnv = raw_data_bridge.Env
+type MsEnv = ms.Env
 type Env struct {
 	RdbEnv
-	ms.Env
+	MsEnv
 	MQ_URI      string
 	MQ_EXCHANGE string `default:"routed"`
 	MQ_CLIENT   string
 	MQ_QUEUE    string
 	MQ_KEY      string
-	MONGO_URI   string
+	// Deprecated: will be removed in favor of REST based raw data bridge
+	MONGO_URI string
 }
 
 func getMongo[Raw any](uri string, m dto.Notification) (*dto.Raw[Raw], error) {

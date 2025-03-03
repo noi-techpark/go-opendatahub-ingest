@@ -7,6 +7,7 @@ package mq
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 
 	"github.com/noi-techpark/go-opendatahub-ingest/dto"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -26,6 +27,8 @@ func (r *R) Close() {
 	}
 }
 
+// Overwrite the handler that is called when rabbitmq connection terminates
+// Default handler logs and panics
 func (r *R) OnClose(handler func(*amqp.Error)) {
 	r.Con.NotifyClose(func() chan *amqp.Error {
 		notifyClose := make(chan *amqp.Error)
@@ -56,6 +59,11 @@ func Connect(uri string, client string) (R, error) {
 
 	r.Ch = ch
 	r.Con = con
+
+	r.OnClose(func(err *amqp.Error) {
+		slog.Error("rabbitmq connection closed unexpectedly")
+		panic(err)
+	})
 
 	return r, nil
 }

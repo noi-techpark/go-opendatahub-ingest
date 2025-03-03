@@ -5,6 +5,8 @@
 package dc
 
 import (
+	"log/slog"
+
 	"github.com/noi-techpark/go-opendatahub-ingest/dto"
 	"github.com/noi-techpark/go-opendatahub-ingest/mq"
 	"github.com/noi-techpark/go-opendatahub-ingest/ms"
@@ -22,6 +24,8 @@ func PubFromEnv(e Env) (chan<- dto.RawAny, error) {
 	return Pub(e.MQ_URI, e.MQ_CLIENT, e.MQ_EXCHANGE)
 }
 
+// Create a channel for publishing to rabbitmq
+// If the publish fails, the channel is closed
 func Pub(uri string, client string, exchange string) (chan<- dto.RawAny, error) {
 	c, err := mq.Connect(uri, client)
 	if err != nil {
@@ -32,7 +36,9 @@ func Pub(uri string, client string, exchange string) (chan<- dto.RawAny, error) 
 
 	go func() {
 		for msg := range rabbitChan {
-			c.Publish(msg, exchange)
+			err := c.Publish(msg, exchange)
+			slog.Error("rabbit publish failed", "err", err)
+			close(rabbitChan)
 		}
 	}()
 	return rabbitChan, nil //UwU

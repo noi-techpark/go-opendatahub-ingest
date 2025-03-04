@@ -36,9 +36,10 @@ func Pub(uri string, client string, exchange string) (chan<- dto.RawAny, error) 
 
 	go func() {
 		for msg := range rabbitChan {
-			err := c.Publish(msg, exchange)
-			slog.Error("rabbit publish failed", "err", err)
-			close(rabbitChan)
+			if err := c.Publish(msg, exchange); err != nil {
+				slog.Error("rabbit publish failed", "err", err)
+				close(rabbitChan)
+			}
 		}
 	}()
 	return rabbitChan, nil //UwU

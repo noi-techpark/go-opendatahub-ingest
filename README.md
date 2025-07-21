@@ -4,6 +4,11 @@ SPDX-FileCopyrightText: 2024 NOI Techpark <digital@noi.bz.it>
 SPDX-License-Identifier: CC0-1.0
 -->
 
+
+# OBSOLETE
+This repo is obsolete, all service should use https://github.com/noi-techpark/opendatahub-go-sdk instead
+
+
 # Golang libs for Open Data Hub ingestion microservices
 
 These libraries are for use inside the Open Data Hub to implement Data collectors, Transformers and Elaborations

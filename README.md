@@ -5,8 +5,8 @@ SPDX-License-Identifier: CC0-1.0
 -->
 
 
-# OBSOLETE
-This repo is obsolete, all service should use https://github.com/noi-techpark/opendatahub-go-sdk instead
+# DEPRECATED
+This repo is deprecated, all service should use https://github.com/noi-techpark/opendatahub-go-sdk instead
 
 
 # Golang libs for Open Data Hub ingestion microservices
